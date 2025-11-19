@@ -11,7 +11,7 @@ public class ConsumableItemOptions extends ItemOptions {
     private final boolean returnItem;
     @Nullable private final Item returnItemStack;
 
-    private ConsumableItemOptions(Builder builder) {
+    protected ConsumableItemOptions(Builder builder) {
         super(builder);
         this.foodProperties = builder.foodProperties;
         this.alwaysEdible = builder.alwaysEdible;

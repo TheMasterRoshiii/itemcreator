@@ -7,7 +7,7 @@ public class TotemOptions extends ItemOptions {
     @Nullable private final ItemEffect[] activationEffects;
     @Nullable private final String activationSound;
 
-    private TotemOptions(Builder builder) {
+    protected TotemOptions(Builder builder) {
         super(builder);
         this.destroyOnUse = builder.destroyOnUse;
         this.activationEffects = builder.activationEffects;

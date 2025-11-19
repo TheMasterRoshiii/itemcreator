@@ -1,7 +1,6 @@
 package com.me.master.itemcreator.config;
 
-import com.google.gson.*;
-import com.me.master.itemcreator.data.ItemDefinition;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
@@ -20,6 +19,13 @@ public class ConfigValidator {
             errors.add("Missing 'type' field");
         }
         
+        if (json.has("name")) {
+            String name = json.get("name").getAsString();
+            if (!name.matches("^[a-z0-9_]+$")) {
+                errors.add("Item name must be lowercase and contain only letters, numbers, and underscores");
+            }
+        }
+        
         if (json.has("maxStackSize")) {
             int stackSize = json.get("maxStackSize").getAsInt();
             if (stackSize < 1 || stackSize > 64) {
@@ -34,6 +40,39 @@ public class ConfigValidator {
             }
         }
         
+        if (json.has("type")) {
+            String type = json.get("type").getAsString();
+            if (type.equals("pickaxe") || type.equals("axe")) {
+                if (!json.has("material")) {
+                    errors.add("Tool type '" + type + "' requires 'material' field");
+                }
+                if (!json.has("attackDamage")) {
+                    errors.add("Tool type '" + type + "' requires 'attackDamage' field");
+                }
+                if (!json.has("attackSpeed")) {
+                    errors.add("Tool type '" + type + "' requires 'attackSpeed' field");
+                }
+            }
+            
+            if (type.equals("armor")) {
+                if (!json.has("slot")) {
+                    errors.add("Armor requires 'slot' field (HELMET, CHESTPLATE, LEGGINGS, BOOTS)");
+                }
+            }
+        }
+        
         return errors;
+    }
+    
+    public static boolean isValid(JsonObject json, Logger logger) {
+        List<String> errors = validateItemConfig(json, logger);
+        
+        if (!errors.isEmpty()) {
+            logger.error("Invalid item configuration:");
+            errors.forEach(error -> logger.error("  - {}", error));
+            return false;
+        }
+        
+        return true;
     }
 }

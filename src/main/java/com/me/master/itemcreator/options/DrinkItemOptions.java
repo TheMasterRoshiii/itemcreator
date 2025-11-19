@@ -22,8 +22,43 @@ public class DrinkItemOptions extends ConsumableItemOptions {
         private boolean removeGlassBottle = true;
         @Nullable private String drinkSound = null;
 
-        public Builder removeGlassBottle(boolean removeGlassBottle) { this.removeGlassBottle = removeGlassBottle; return this; }
-        public Builder drinkSound(@Nullable String drinkSound) { this.drinkSound = drinkSound; return this; }
-        public DrinkItemOptions build() { return new DrinkItemOptions(this); }
+        @Override
+        public Builder foodProperties(FoodProperties foodProperties) {
+            super.foodProperties(foodProperties);
+            return this;
+        }
+
+        @Override
+        public Builder alwaysEdible(boolean alwaysEdible) {
+            super.alwaysEdible(alwaysEdible);
+            return this;
+        }
+
+        @Override
+        public Builder useDuration(int useDuration) {
+            super.useDuration(useDuration);
+            return this;
+        }
+
+        @Override
+        public Builder returnItem(boolean returnItem) {
+            super.returnItem(returnItem);
+            return this;
+        }
+
+        public Builder removeGlassBottle(boolean removeGlassBottle) {
+            this.removeGlassBottle = removeGlassBottle;
+            return this;
+        }
+
+        public Builder drinkSound(@Nullable String drinkSound) {
+            this.drinkSound = drinkSound;
+            return this;
+        }
+
+        @Override
+        public DrinkItemOptions build() {
+            return new DrinkItemOptions(this);
+        }
     }
 }

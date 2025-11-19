@@ -2,6 +2,8 @@ package com.me.master.itemcreator.loader;
 
 import com.google.gson.JsonObject;
 import com.me.master.itemcreator.ItemCreator;
+import com.me.master.itemcreator.config.ConfigValidator;
+import com.me.master.itemcreator.types.ItemType;
 import com.me.master.itemcreator.item.*;
 import com.me.master.itemcreator.options.*;
 import net.minecraft.world.item.Item;
@@ -30,14 +32,23 @@ public class Loader {
 
             for (JsonObject config : configs) {
                 try {
+                    // VALIDACIÓN AGREGADA
+                    if (!ConfigValidator.isValid(config, LOGGER)) {
+                        LOGGER.warn("Skipping invalid item configuration");
+                        continue;
+                    }
+
                     String name = config.get("name").getAsString();
-                    String type = config.get("type").getAsString().toLowerCase();
+                    String typeStr = config.get("type").getAsString().toLowerCase();
+
+                    // USAR ITEMTYPE ENUM
+                    ItemType type = ItemType.fromString(typeStr);
                     Item item = createItem(type, config);
 
                     if (item != null) {
                         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ItemCreator.MOD_ID, name);
                         helper.register(id, item);
-                        LOGGER.debug("Registered item: {}", name);
+                        LOGGER.info("✓ Registered item: {} (type: {})", name, type.getName());
                     }
                 } catch (Exception e) {
                     LOGGER.error("Failed to register item from config: {}", config, e);
@@ -46,17 +57,18 @@ public class Loader {
         });
     }
 
-    private static Item createItem(String type, JsonObject config) {
+    // CAMBIAR A ITEMTYPE EN LUGAR DE STRING
+    private static Item createItem(ItemType type, JsonObject config) {
         return switch (type) {
-            case "pickaxe" -> createPickaxe(config);
-            case "axe" -> createAxe(config);
-            case "trident" -> createTrident(config);
-            case "crossbow" -> createCrossbow(config);
-            case "shield" -> createShield(config);
-            case "armor" -> createArmor(config);
-            case "totem" -> createTotem(config);
-            case "consumable" -> createConsumable(config);
-            case "drink" -> createDrink(config);
+            case PICKAXE -> createPickaxe(config);
+            case AXE -> createAxe(config);
+            case TRIDENT -> createTrident(config);
+            case CROSSBOW -> createCrossbow(config);
+            case SHIELD -> createShield(config);
+            case ARMOR -> createArmor(config);
+            case TOTEM -> createTotem(config);
+            case CONSUMABLE -> createConsumable(config);
+            case DRINK -> createDrink(config);
             default -> createBasicItem(config);
         };
     }

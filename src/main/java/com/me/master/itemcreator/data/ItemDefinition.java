@@ -1,7 +1,7 @@
 package com.me.master.itemcreator.data;
 
-import com.me.master.itemcreator.types.ItemType;
 import net.minecraft.resources.ResourceLocation;
+import com.me.master.itemcreator.types.ItemType;
 
 public record ItemDefinition(
     String name,

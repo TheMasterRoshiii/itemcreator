@@ -11,7 +11,7 @@ public class ItemOptions {
     private final int maxDamage;
     private final boolean fireResistant;
 
-    private ItemOptions(Builder builder) {
+    protected ItemOptions(Builder builder) {
         this.settings = builder.settings;
         this.effects = builder.effects;
         this.attributes = builder.attributes;
